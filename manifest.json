@@ -1,0 +1,19 @@
+{
+  "name": "İmsakiye",
+  "short_name": "İmsakiye",
+  "description": "Konum tabanlı namaz vakitleri ve aylık imsakiye",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#080d1a",
+  "theme_color": "#080d1a",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
