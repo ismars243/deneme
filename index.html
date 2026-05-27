@@ -1,66 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>İmsakiye</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#080d1a">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="İmsakiye">
-  <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header id="header">
-    <span id="location-text">📍 Konum alınıyor…</span>
-    <button id="notif-btn" aria-label="Bildirimleri aç/kapat">
-      <svg id="bell-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-      </svg>
-    </button>
-  </header>
-
-  <main>
-    <section class="hero">
-      <p class="next-label" id="next-label">yükleniyor</p>
-      <div class="countdown" id="countdown">--:--:--</div>
-      <p class="until-text" id="until-text">vakite kadar</p>
-      <div class="prayers-row" id="prayers-row"></div>
-      <div class="scroll-hint">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-        aylık imsakiye
-      </div>
-    </section>
-
-    <section class="monthly-section">
-      <h2 id="month-heading">Aylık İmsakiye</h2>
-      <div class="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th>Gün</th>
-              <th>İmsak</th>
-              <th>Güneş</th>
-              <th>Öğle</th>
-              <th>İkindi</th>
-              <th>Akşam</th>
-              <th>Yatsı</th>
-            </tr>
-          </thead>
-          <tbody id="table-body">
-            <tr><td colspan="7" class="loading">Yükleniyor…</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-  </main>
-
-  <script src="app.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Okul Proje Takip Sistemi</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
