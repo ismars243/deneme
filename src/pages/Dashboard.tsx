@@ -5,12 +5,15 @@ import { RecentProjects } from '../components/dashboard/RecentProjects';
 export default function Dashboard() {
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Günaydın' : hour < 18 ? 'İyi günler' : 'İyi akşamlar';
+  const today = new Date().toLocaleDateString('tr-TR', { weekday: 'long', day: 'numeric', month: 'long' });
 
   return (
-    <div className="space-y-5 max-w-5xl">
-      <div>
-        <h2 className="text-xl font-bold text-gray-900">{greeting}, Admin 👋</h2>
-        <p className="text-sm text-gray-500 mt-0.5">İşte projelerin son durumu.</p>
+    <div className="space-y-6 max-w-5xl">
+      <div className="flex items-end justify-between">
+        <div>
+          <p className="text-xs text-gray-400 mb-1">{today}</p>
+          <h2 className="text-xl font-bold text-gray-900">{greeting}, Admin 👋</h2>
+        </div>
       </div>
 
       <StatsCards />

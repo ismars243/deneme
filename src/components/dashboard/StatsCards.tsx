@@ -8,23 +8,24 @@ export function StatsCards() {
   const late = projects.filter(p => p.status === 'gecikiyor').length;
 
   const stats = [
-    { label: 'Toplam Proje', value: total, icon: FolderKanban, color: 'bg-blue-50 text-blue-600', border: 'border-blue-100' },
-    { label: 'Aktif', value: active, icon: PlayCircle, color: 'bg-green-50 text-green-600', border: 'border-green-100' },
-    { label: 'Tamamlanmış', value: done, icon: CheckCircle2, color: 'bg-indigo-50 text-indigo-600', border: 'border-indigo-100' },
-    { label: 'Geciken', value: late, icon: AlertTriangle, color: 'bg-red-50 text-red-600', border: 'border-red-100' },
+    { label: 'Toplam Proje', value: total, icon: FolderKanban, accent: 'border-l-blue-500', iconColor: 'text-blue-400' },
+    { label: 'Aktif', value: active, icon: PlayCircle, accent: 'border-l-green-500', iconColor: 'text-green-400' },
+    { label: 'Tamamlanmış', value: done, icon: CheckCircle2, accent: 'border-l-indigo-500', iconColor: 'text-indigo-400' },
+    { label: 'Geciken', value: late, icon: AlertTriangle, accent: 'border-l-red-500', iconColor: 'text-red-400' },
   ];
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      {stats.map(({ label, value, icon: Icon, color, border }) => (
-        <div key={label} className={`bg-white rounded-xl border ${border} shadow-sm p-5 flex items-center gap-4`}>
-          <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${color}`}>
-            <Icon size={22} />
+      {stats.map(({ label, value, icon: Icon, accent, iconColor }) => (
+        <div
+          key={label}
+          className={`bg-white rounded-xl border border-gray-200 border-l-4 ${accent} shadow-sm px-5 py-4`}
+        >
+          <div className="flex items-start justify-between">
+            <p className="text-3xl font-bold text-gray-900 leading-none">{value}</p>
+            <Icon size={18} className={iconColor} />
           </div>
-          <div>
-            <p className="text-2xl font-bold text-gray-900">{value}</p>
-            <p className="text-xs text-gray-500 mt-0.5">{label}</p>
-          </div>
+          <p className="text-xs text-gray-400 mt-2">{label}</p>
         </div>
       ))}
     </div>

@@ -28,15 +28,8 @@ export function getStatusColor(status: ProjectStatus) {
   return map[status];
 }
 
-export function getTypeColor(type: ProjectType) {
-  const map: Record<ProjectType, string> = {
-    'TÜBİTAK 4006': 'bg-purple-100 text-purple-700 border-purple-200',
-    'eTwinning': 'bg-sky-100 text-sky-700 border-sky-200',
-    'Bilim Fuarı': 'bg-orange-100 text-orange-700 border-orange-200',
-    'Sosyal Sorumluluk': 'bg-teal-100 text-teal-700 border-teal-200',
-    'ERASMUS+': 'bg-indigo-100 text-indigo-700 border-indigo-200',
-  };
-  return map[type];
+export function getTypeColor(_type: ProjectType) {
+  return 'bg-gray-100 text-gray-500 border-gray-200';
 }
 
 export function daysSinceUpdate(dateStr: string) {
