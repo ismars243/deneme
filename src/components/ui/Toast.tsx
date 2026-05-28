@@ -3,63 +3,45 @@ import { CheckCircle, XCircle, AlertCircle, X } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
 type ToastType = 'success' | 'error' | 'info';
+interface Toast { id: number; message: string; type: ToastType; }
+interface ToastCtx { toast: (msg: string, type?: ToastType) => void; }
 
-interface Toast {
-  id: number;
-  message: string;
-  type: ToastType;
-}
-
-interface ToastContextValue {
-  toast: (message: string, type?: ToastType) => void;
-}
-
-const ToastContext = createContext<ToastContextValue>({ toast: () => {} });
-
-export function useToast() {
-  return useContext(ToastContext);
-}
+const ToastContext = createContext<ToastCtx>({ toast: () => {} });
+export function useToast() { return useContext(ToastContext); }
 
 let nextId = 0;
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
-
   const toast = useCallback((message: string, type: ToastType = 'success') => {
     const id = nextId++;
     setToasts(prev => [...prev, { id, message, type }]);
     setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 3500);
   }, []);
 
-  const remove = (id: number) => setToasts(prev => prev.filter(t => t.id !== id));
-
   const icons = { success: CheckCircle, error: XCircle, info: AlertCircle };
-  const colors = {
-    success: 'border-green-200 bg-white text-green-800',
-    error: 'border-red-200 bg-white text-red-800',
-    info: 'border-blue-200 bg-white text-blue-800',
+  const styles = {
+    success: 'border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400',
+    error: 'border-red-200 dark:border-red-800 text-red-700 dark:text-red-400',
+    info: 'border-primary-200 dark:border-primary-800 text-primary-700 dark:text-primary-400',
   };
-  const iconColors = { success: 'text-green-500', error: 'text-red-500', info: 'text-blue-500' };
 
   return (
     <ToastContext.Provider value={{ toast }}>
       {children}
-      <div className="fixed bottom-4 right-4 z-[100] flex flex-col gap-2 pointer-events-none">
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 w-full max-w-sm px-4 pointer-events-none">
         {toasts.map(t => {
           const Icon = icons[t.type];
           return (
-            <div
-              key={t.id}
-              className={cn(
-                'flex items-center gap-3 px-4 py-3 rounded-xl border shadow-lg pointer-events-auto max-w-xs',
-                'animate-in slide-in-from-bottom-4 fade-in',
-                colors[t.type]
-              )}
-            >
-              <Icon size={18} className={iconColors[t.type]} />
-              <span className="text-sm font-medium flex-1">{t.message}</span>
-              <button onClick={() => remove(t.id)} className="text-gray-400 hover:text-gray-600 ml-1">
-                <X size={14} />
+            <div key={t.id} className={cn(
+              'flex items-center gap-3 px-4 py-3 rounded-2xl border shadow-xl pointer-events-auto animate-slide-up',
+              'bg-white dark:bg-slate-900',
+              styles[t.type]
+            )}>
+              <Icon size={18} className="flex-shrink-0" />
+              <span className="text-sm font-medium flex-1 text-slate-700 dark:text-slate-200">{t.message}</span>
+              <button onClick={() => setToasts(p => p.filter(x => x.id !== t.id))}>
+                <X size={14} className="text-slate-400" />
               </button>
             </div>
           );

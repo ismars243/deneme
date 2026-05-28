@@ -1,84 +1,84 @@
-import { useState } from 'react';
-import { Save, School } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Input, Select, Textarea } from '../components/ui/Input';
-import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card';
+import { PageHeader } from '../components/layout/PageHeader';
+import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../components/ui/Toast';
+import { Moon, Sun, Globe, Bell, Info, ChevronRight, LucideIcon } from 'lucide-react';
+import { cn } from '../lib/utils';
+
+function Toggle({ value, onChange }: { value: boolean; onChange: () => void }) {
+  return (
+    <button onClick={onChange}
+      className={cn('relative w-11 h-6 rounded-full transition-colors flex-shrink-0',
+        value ? 'bg-primary-500' : 'bg-slate-300 dark:bg-slate-600'
+      )}>
+      <span className={cn('absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform',
+        value && 'translate-x-5'
+      )} />
+    </button>
+  );
+}
+
+type ToggleItem = { icon: LucideIcon; label: string; kind: 'toggle'; value: boolean; onChange: () => void };
+type LinkItem   = { icon: LucideIcon; label: string; kind: 'link'; value?: string; onClick?: () => void };
+type SettingItem = ToggleItem | LinkItem;
 
 export default function Settings() {
+  const { dark, toggle } = useTheme();
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      toast('Ayarlar kaydedildi!', 'success');
-    }, 800);
-  }
+  const sections: { title: string; items: SettingItem[] }[] = [
+    {
+      title: 'Görünüm',
+      items: [
+        { icon: dark ? Moon : Sun, label: 'Karanlık Tema', kind: 'toggle', value: dark, onChange: toggle },
+      ],
+    },
+    {
+      title: 'Bildirimler',
+      items: [
+        { icon: Bell, label: 'Bütçe Uyarıları',  kind: 'toggle', value: true,  onChange: () => toast('Yakında!', 'info') },
+        { icon: Bell, label: 'Aylık Özet',        kind: 'toggle', value: false, onChange: () => toast('Yakında!', 'info') },
+      ],
+    },
+    {
+      title: 'Uygulama',
+      items: [
+        { icon: Globe, label: 'Dil',      kind: 'link', value: 'Türkçe', onClick: () => toast('Yakında!', 'info') },
+        { icon: Info,  label: 'Versiyon', kind: 'link', value: '1.0.0' },
+      ],
+    },
+  ];
 
   return (
-    <div className="space-y-5 max-w-2xl">
-      <div className="flex items-center gap-2">
-        <School size={18} className="text-gray-400" />
-        <h2 className="text-base font-semibold text-gray-900">Okul Ayarları</h2>
+    <div className="animate-fade-in">
+      <PageHeader title="Ayarlar" />
+
+      <div className="space-y-4 mx-4 my-4 pb-6">
+        {sections.map(section => (
+          <div key={section.title}>
+            <p className="text-xs font-bold text-muted uppercase tracking-wide mb-2 px-1">{section.title}</p>
+            <div className="card overflow-hidden divide-y divider">
+              {section.items.map(item => (
+                <div key={item.label}
+                  className={cn('flex items-center gap-3 px-4 py-3.5',
+                    item.kind === 'link' && item.onClick && 'cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors'
+                  )}
+                  onClick={item.kind === 'link' ? item.onClick : undefined}>
+                  <item.icon size={18} className="text-slate-500 dark:text-slate-400 flex-shrink-0" />
+                  <span className="flex-1 text-sm font-medium text-slate-700 dark:text-slate-300">{item.label}</span>
+                  {item.kind === 'toggle' ? (
+                    <Toggle value={item.value} onChange={item.onChange} />
+                  ) : (
+                    <div className="flex items-center gap-1">
+                      {item.value && <span className="text-xs text-muted">{item.value}</span>}
+                      {item.onClick && <ChevronRight size={14} className="text-slate-400" />}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
-
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <Card>
-          <CardHeader>
-            <CardTitle>Okul Bilgileri</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Input label="Okul Adı" id="school-name" defaultValue="Atatürk Ortaokulu" />
-            <div className="grid grid-cols-2 gap-3">
-              <Input label="İl" id="city" defaultValue="İstanbul" />
-              <Input label="İlçe" id="district" defaultValue="Kadıköy" />
-            </div>
-            <Input label="MEB Okul Kodu" id="meb-code" defaultValue="340201042" />
-            <Textarea label="Adres" id="address" defaultValue="Moda Cad. No:12 Kadıköy / İstanbul" rows={2} />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>İletişim</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Input label="Okul Müdürü" id="principal" defaultValue="Hasan Çelik" />
-            <Input label="Telefon" id="phone" type="tel" defaultValue="0216 555 00 00" />
-            <Input label="E-posta" id="email" type="email" defaultValue="info@ataturkortaokulu.edu.tr" />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Sistem Ayarları</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Select label="Öğretim Yılı" id="year">
-              <option>2024–2025</option>
-              <option>2025–2026</option>
-            </Select>
-            <Select label="Bildirim Dili" id="lang">
-              <option>Türkçe</option>
-              <option>İngilizce</option>
-            </Select>
-            <div className="flex items-center gap-3">
-              <input type="checkbox" id="notif" className="w-4 h-4 rounded border-gray-300 text-blue-600" defaultChecked />
-              <label htmlFor="notif" className="text-sm text-gray-700">E-posta bildirimleri aktif</label>
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="flex justify-end">
-          <Button type="submit" loading={loading} size="lg">
-            <Save size={15} />
-            Kaydet
-          </Button>
-        </div>
-      </form>
     </div>
   );
 }

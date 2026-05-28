@@ -1,251 +1,70 @@
-export type ProjectType = 'TÜBİTAK 4006' | 'eTwinning' | 'Bilim Fuarı' | 'Sosyal Sorumluluk' | 'ERASMUS+';
-export type ProjectStatus = 'aktif' | 'tamamlandı' | 'gecikiyor' | 'beklemede';
+import type { Account, Transaction, Budget, User, Notification } from './types';
 
-export interface Milestone {
-  id: string;
-  title: string;
-  dueDate: string;
-  completed: boolean;
-}
+export const mockUser: User = {
+  id: 'u1',
+  name: 'Ahmet Yılmaz',
+  email: 'ahmet@finova.app',
+  currency: 'TRY',
+  language: 'tr',
+  darkMode: false,
+  monthlyBudget: 15000,
+};
 
-export interface Comment {
-  id: string;
-  author: string;
-  role: string;
-  content: string;
-  date: string;
-}
-
-export interface Activity {
-  id: string;
-  action: string;
-  user: string;
-  date: string;
-  type: 'update' | 'comment' | 'milestone' | 'create' | 'file';
-}
-
-export interface Project {
-  id: string;
-  title: string;
-  type: ProjectType;
-  status: ProjectStatus;
-  teacher: string;
-  teacherId: string;
-  startDate: string;
-  endDate: string;
-  description: string;
-  progress: number;
-  milestones: Milestone[];
-  comments: Comment[];
-  activities: Activity[];
-  photos: string[];
-  lastUpdate: string;
-  studentCount: number;
-}
-
-export interface Teacher {
-  id: string;
-  name: string;
-  subject: string;
-  email: string;
-  activeProjects: number;
-  totalProjects: number;
-}
-
-export const teachers: Teacher[] = [
-  { id: 't1', name: 'Ayşe Kaya', subject: 'Fen Bilimleri', email: 'ayse.kaya@okul.edu.tr', activeProjects: 2, totalProjects: 5 },
-  { id: 't2', name: 'Mehmet Demir', subject: 'Matematik', email: 'mehmet.demir@okul.edu.tr', activeProjects: 2, totalProjects: 4 },
-  { id: 't3', name: 'Fatma Şahin', subject: 'Türkçe', email: 'fatma.sahin@okul.edu.tr', activeProjects: 1, totalProjects: 3 },
-  { id: 't4', name: 'Ali Yılmaz', subject: 'Sosyal Bilgiler', email: 'ali.yilmaz@okul.edu.tr', activeProjects: 0, totalProjects: 3 },
+export const mockAccounts: Account[] = [
+  { id: 'acc1', name: 'Nakit',          type: 'cash',    balance: 2850,   currency: 'TRY', color: '#10b981' },
+  { id: 'acc2', name: 'Ziraat Bankası', type: 'bank',    balance: 18420,  currency: 'TRY', color: '#6366f1' },
+  { id: 'acc3', name: 'Garanti Kredi',  type: 'credit',  balance: -4320,  currency: 'TRY', color: '#ef4444' },
+  { id: 'acc4', name: 'Papara',         type: 'digital', balance: 1250,   currency: 'TRY', color: '#f59e0b' },
 ];
 
-export const projects: Project[] = [
-  {
-    id: 'p1',
-    title: 'Yenilenebilir Enerji Kaynakları',
-    type: 'TÜBİTAK 4006',
-    status: 'aktif',
-    teacher: 'Ayşe Kaya',
-    teacherId: 't1',
-    startDate: '2024-09-01',
-    endDate: '2025-03-15',
-    description: 'Güneş ve rüzgar enerjisi kullanarak okul bahçesinde küçük ölçekli enerji üretim modeli oluşturma projesi.',
-    progress: 65,
-    lastUpdate: '2025-01-10',
-    studentCount: 8,
-    milestones: [
-      { id: 'm1', title: 'Literatür taraması tamamlandı', dueDate: '2024-10-01', completed: true },
-      { id: 'm2', title: 'Deney düzeneği kurulumu', dueDate: '2024-11-15', completed: true },
-      { id: 'm3', title: 'Veri toplama aşaması', dueDate: '2025-01-30', completed: false },
-    ],
-    comments: [
-      { id: 'c1', author: 'Ayşe Kaya', role: 'Proje Yöneticisi', content: 'Deney sonuçları beklentilerin üzerinde, harika ilerliyoruz!', date: '2025-01-08' },
-      { id: 'c2', author: 'Müdür Yardımcısı', role: 'İdare', content: 'TÜBİTAK ile yazışmalar tamamlandı, onay bekleniyor.', date: '2025-01-05' },
-    ],
-    activities: [
-      { id: 'a1', action: 'Proje oluşturuldu', user: 'Admin', date: '2024-09-01', type: 'create' },
-      { id: 'a2', action: 'Milestone tamamlandı: Deney düzeneği kurulumu', user: 'Ayşe Kaya', date: '2024-11-15', type: 'milestone' },
-      { id: 'a3', action: 'Yorum eklendi', user: 'Ayşe Kaya', date: '2025-01-08', type: 'comment' },
-      { id: 'a4', action: 'Proje güncellendi', user: 'Admin', date: '2025-01-10', type: 'update' },
-    ],
-    photos: [
-      'https://picsum.photos/seed/p1a/600/400',
-      'https://picsum.photos/seed/p1b/600/400',
-      'https://picsum.photos/seed/p1c/600/400',
-    ],
-  },
-  {
-    id: 'p2',
-    title: 'Dijital Kütüphane Projesi',
-    type: 'eTwinning',
-    status: 'aktif',
-    teacher: 'Fatma Şahin',
-    teacherId: 't3',
-    startDate: '2024-10-01',
-    endDate: '2025-05-30',
-    description: 'Avrupa\'daki partner okullarla ortak dijital kütüphane platformu oluşturma ve kültürel eser paylaşımı projesi.',
-    progress: 40,
-    lastUpdate: '2025-01-03',
-    studentCount: 12,
-    milestones: [
-      { id: 'm1', title: 'Partner okul iletişimi sağlandı', dueDate: '2024-10-20', completed: true },
-      { id: 'm2', title: 'İçerik toplama tamamlandı', dueDate: '2024-12-01', completed: false },
-      { id: 'm3', title: 'Platform entegrasyonu', dueDate: '2025-02-28', completed: false },
-    ],
-    comments: [
-      { id: 'c1', author: 'Fatma Şahin', role: 'Proje Yöneticisi', content: 'Partner okuldan olumlu dönüş aldık.', date: '2025-01-03' },
-    ],
-    activities: [
-      { id: 'a1', action: 'Proje oluşturuldu', user: 'Admin', date: '2024-10-01', type: 'create' },
-      { id: 'a2', action: 'Milestone tamamlandı: Partner okul iletişimi', user: 'Fatma Şahin', date: '2024-10-20', type: 'milestone' },
-    ],
-    photos: [
-      'https://picsum.photos/seed/p2a/600/400',
-      'https://picsum.photos/seed/p2b/600/400',
-    ],
-  },
-  {
-    id: 'p3',
-    title: 'Bilim Şenliği 2024',
-    type: 'Bilim Fuarı',
-    status: 'tamamlandı',
-    teacher: 'Ayşe Kaya',
-    teacherId: 't1',
-    startDate: '2024-06-01',
-    endDate: '2024-09-30',
-    description: 'Okul genelinde düzenlenen bilim şenliği kapsamında öğrencilerin bilimsel proje geliştirme ve sergileme etkinliği.',
-    progress: 100,
-    lastUpdate: '2024-09-30',
-    studentCount: 25,
-    milestones: [
-      { id: 'm1', title: 'Proje başvuruları toplandı', dueDate: '2024-06-30', completed: true },
-      { id: 'm2', title: 'Jüri değerlendirmesi', dueDate: '2024-08-15', completed: true },
-      { id: 'm3', title: 'Sergi ve ödül töreni', dueDate: '2024-09-28', completed: true },
-    ],
-    comments: [
-      { id: 'c1', author: 'Okul Müdürü', role: 'İdare', content: '35 proje ile rekor kırıldı. Emeği geçen herkese teşekkür.', date: '2024-09-30' },
-    ],
-    activities: [
-      { id: 'a1', action: 'Proje oluşturuldu', user: 'Admin', date: '2024-06-01', type: 'create' },
-      { id: 'a2', action: 'Tüm milestone\'lar tamamlandı', user: 'Ayşe Kaya', date: '2024-09-28', type: 'milestone' },
-      { id: 'a3', action: 'Proje tamamlandı olarak işaretlendi', user: 'Admin', date: '2024-09-30', type: 'update' },
-    ],
-    photos: [
-      'https://picsum.photos/seed/p3a/600/400',
-      'https://picsum.photos/seed/p3b/600/400',
-      'https://picsum.photos/seed/p3c/600/400',
-      'https://picsum.photos/seed/p3d/600/400',
-    ],
-  },
-  {
-    id: 'p4',
-    title: 'Çevre Temizliği Kampanyası',
-    type: 'Sosyal Sorumluluk',
-    status: 'gecikiyor',
-    teacher: 'Ali Yılmaz',
-    teacherId: 't4',
-    startDate: '2024-08-01',
-    endDate: '2024-12-31',
-    description: 'Okul çevresi ve mahalle parkındaki temizlik kampanyası ile gençlerde çevre bilinci oluşturma projesi.',
-    progress: 30,
-    lastUpdate: '2024-11-20',
-    studentCount: 15,
-    milestones: [
-      { id: 'm1', title: 'Bilinçlendirme atölyeleri', dueDate: '2024-09-15', completed: true },
-      { id: 'm2', title: 'Saha temizlik etkinliği', dueDate: '2024-11-01', completed: false },
-      { id: 'm3', title: 'Belgesel hazırlandı', dueDate: '2024-12-15', completed: false },
-    ],
-    comments: [
-      { id: 'c1', author: 'Ali Yılmaz', role: 'Proje Yöneticisi', content: 'Hava koşulları nedeniyle saha etkinliği ertelendi.', date: '2024-11-20' },
-    ],
-    activities: [
-      { id: 'a1', action: 'Proje oluşturuldu', user: 'Admin', date: '2024-08-01', type: 'create' },
-      { id: 'a2', action: 'Durum güncellendi: gecikiyor', user: 'Admin', date: '2024-11-10', type: 'update' },
-    ],
-    photos: [
-      'https://picsum.photos/seed/p4a/600/400',
-    ],
-  },
-  {
-    id: 'p5',
-    title: 'Avrupa ile Köprüler',
-    type: 'ERASMUS+',
-    status: 'aktif',
-    teacher: 'Mehmet Demir',
-    teacherId: 't2',
-    startDate: '2024-11-01',
-    endDate: '2026-04-30',
-    description: 'Polonya, Portekiz ve Türkiye okulları arasında matematik eğitimi üzerine işbirliği ve öğrenci değişim programı.',
-    progress: 55,
-    lastUpdate: '2025-01-12',
-    studentCount: 6,
-    milestones: [
-      { id: 'm1', title: 'Ortak müfredat oluşturuldu', dueDate: '2024-12-01', completed: true },
-      { id: 'm2', title: 'İlk değişim programı (Polonya)', dueDate: '2025-03-01', completed: false },
-      { id: 'm3', title: 'Ara rapor teslimi', dueDate: '2025-06-01', completed: false },
-    ],
-    comments: [
-      { id: 'c1', author: 'Mehmet Demir', role: 'Proje Koordinatörü', content: 'Polonya ortağımız vize sürecine başladı.', date: '2025-01-12' },
-    ],
-    activities: [
-      { id: 'a1', action: 'Proje oluşturuldu', user: 'Admin', date: '2024-11-01', type: 'create' },
-      { id: 'a2', action: 'Dosya yüklendi: ortak_müfredat_v2.pdf', user: 'Mehmet Demir', date: '2024-12-01', type: 'file' },
-      { id: 'a3', action: 'Milestone tamamlandı: Ortak müfredat', user: 'Mehmet Demir', date: '2024-12-01', type: 'milestone' },
-    ],
-    photos: [
-      'https://picsum.photos/seed/p5a/600/400',
-      'https://picsum.photos/seed/p5b/600/400',
-    ],
-  },
-  {
-    id: 'p6',
-    title: 'Matematik Olimpiyat Hazırlık',
-    type: 'TÜBİTAK 4006',
-    status: 'beklemede',
-    teacher: 'Mehmet Demir',
-    teacherId: 't2',
-    startDate: '2025-02-01',
-    endDate: '2025-11-30',
-    description: 'Seçilen öğrencilerin ulusal matematik olimpiyatlarına hazırlanması için yoğunlaştırılmış çalışma programı.',
-    progress: 10,
-    lastUpdate: '2024-12-15',
-    studentCount: 4,
-    milestones: [
-      { id: 'm1', title: 'Öğrenci seçimi yapılacak', dueDate: '2025-02-15', completed: false },
-      { id: 'm2', title: 'Çalışma programı hazırlanacak', dueDate: '2025-03-01', completed: false },
-    ],
-    comments: [],
-    activities: [
-      { id: 'a1', action: 'Proje taslağı oluşturuldu', user: 'Mehmet Demir', date: '2024-12-15', type: 'create' },
-    ],
-    photos: [],
-  },
+export const mockTransactions: Transaction[] = [
+  { id: 't1',  type: 'income',  amount: 18500, category: 'Maaş',           accountId: 'acc2', title: 'Mayıs Maaşı',         date: '2026-05-05' },
+  { id: 't2',  type: 'income',  amount: 2500,  category: 'Ek Gelir',        accountId: 'acc4', title: 'Freelance Proje',      date: '2026-05-10', note: 'Web tasarım projesi' },
+  { id: 't3',  type: 'expense', amount: 4800,  category: 'Kira',            accountId: 'acc2', title: 'Mayıs Kirası',         date: '2026-05-01' },
+  { id: 't4',  type: 'expense', amount: 485,   category: 'Market',          accountId: 'acc1', title: 'Migros Alışverişi',    date: '2026-05-27' },
+  { id: 't5',  type: 'expense', amount: 320,   category: 'Yemek & İçecek',  accountId: 'acc3', title: 'Restoran – Akşam',     date: '2026-05-28' },
+  { id: 't6',  type: 'expense', amount: 750,   category: 'Ulaşım',          accountId: 'acc2', title: 'Benzin',               date: '2026-05-26' },
+  { id: 't7',  type: 'expense', amount: 520,   category: 'Fatura',          accountId: 'acc2', title: 'Elektrik Faturası',    date: '2026-05-25' },
+  { id: 't8',  type: 'expense', amount: 169,   category: 'Eğlence',         accountId: 'acc3', title: 'Netflix',              date: '2026-05-20' },
+  { id: 't9',  type: 'expense', amount: 1150,  category: 'Giyim',           accountId: 'acc3', title: 'Giyim – Mavi',         date: '2026-05-12', note: 'Sezon alışverişi' },
+  { id: 't10', type: 'expense', amount: 245,   category: 'Sağlık',          accountId: 'acc1', title: 'Eczane',               date: '2026-05-23' },
+  { id: 't11', type: 'expense', amount: 390,   category: 'Fatura',          accountId: 'acc2', title: 'Doğalgaz Faturası',    date: '2026-05-17' },
+  { id: 't12', type: 'expense', amount: 300,   category: 'Ulaşım',          accountId: 'acc1', title: 'Metro Kartı',          date: '2026-05-15' },
+  { id: 't13', type: 'expense', amount: 85,    category: 'Yemek & İçecek',  accountId: 'acc1', title: 'Kafe',                 date: '2026-05-22' },
+  { id: 't14', type: 'income',  amount: 500,   category: 'Prim',            accountId: 'acc2', title: 'Performans Primi',     date: '2026-05-15' },
+  { id: 't15', type: 'expense', amount: 350,   category: 'Eğitim',          accountId: 'acc4', title: 'Udemy Kurs',           date: '2026-05-08' },
+  // Geçen ay
+  { id: 't16', type: 'income',  amount: 18500, category: 'Maaş',            accountId: 'acc2', title: 'Nisan Maaşı',          date: '2026-04-05' },
+  { id: 't17', type: 'expense', amount: 4800,  category: 'Kira',            accountId: 'acc2', title: 'Nisan Kirası',         date: '2026-04-01' },
+  { id: 't18', type: 'expense', amount: 700,   category: 'Ulaşım',          accountId: 'acc2', title: 'Benzin',               date: '2026-04-25' },
+  { id: 't19', type: 'expense', amount: 950,   category: 'Sağlık',          accountId: 'acc3', title: 'Diş Hekimi',           date: '2026-04-22' },
+  { id: 't20', type: 'expense', amount: 620,   category: 'Market',          accountId: 'acc3', title: 'Süpermarket',          date: '2026-04-28' },
+  { id: 't21', type: 'expense', amount: 1400,  category: 'Giyim',           accountId: 'acc3', title: 'Ayakkabı',             date: '2026-04-05' },
+  { id: 't22', type: 'expense', amount: 349,   category: 'Fatura',          accountId: 'acc2', title: 'İnternet Faturası',    date: '2026-04-18' },
 ];
 
-export const chartData = [
-  { ay: 'Eyl', aktif: 1, tamamlandı: 0 },
-  { ay: 'Eki', aktif: 2, tamamlandı: 0 },
-  { ay: 'Kas', aktif: 3, tamamlandı: 0 },
-  { ay: 'Ara', aktif: 4, tamamlandı: 1 },
-  { ay: 'Oca', aktif: 5, tamamlandı: 1 },
+export const mockBudgets: Budget[] = [
+  { id: 'b1',  category: 'Market',         limit: 2500, month: '2026-05' },
+  { id: 'b2',  category: 'Ulaşım',         limit: 1500, month: '2026-05' },
+  { id: 'b3',  category: 'Yemek & İçecek', limit: 2000, month: '2026-05' },
+  { id: 'b4',  category: 'Fatura',         limit: 1200, month: '2026-05' },
+  { id: 'b5',  category: 'Eğlence',        limit: 800,  month: '2026-05' },
+  { id: 'b6',  category: 'Sağlık',         limit: 1000, month: '2026-05' },
+  { id: 'b7',  category: 'Giyim',          limit: 2000, month: '2026-05' },
+  { id: 'b8',  category: 'Eğitim',         limit: 500,  month: '2026-05' },
+  { id: 'b9',  category: 'Kira',           limit: 5000, month: '2026-05' },
+];
+
+export const mockNotifications: Notification[] = [
+  { id: 'n1', title: 'Bütçe Uyarısı', message: 'Ulaşım bütçenizin %82\'sine ulaştınız.', type: 'warning', date: '2026-05-26', read: false },
+  { id: 'n2', title: 'Aylık Özet Hazır', message: 'Nisan ayı mali özeti görüntülemeye hazır.', type: 'info', date: '2026-05-01', read: false },
+  { id: 'n3', title: 'Harika!', message: 'Bu ay geçen aya göre %12 daha az harcadınız.', type: 'success', date: '2026-05-20', read: true },
+];
+
+export const monthlyChartData = [
+  { month: 'Oca', income: 18500, expense: 11200 },
+  { month: 'Şub', income: 18500, expense: 13400 },
+  { month: 'Mar', income: 21000, expense: 12800 },
+  { month: 'Nis', income: 19000, expense: 14200 },
+  { month: 'May', income: 21500, expense: 9564  },
 ];

@@ -1,102 +1,59 @@
+import { BalanceCard } from '../components/dashboard/BalanceCard';
+import { AISuggestion } from '../components/dashboard/AISuggestion';
+import { RecentTransactions } from '../components/dashboard/RecentTransactions';
+import { CategoryChart } from '../components/dashboard/CategoryChart';
 import { useNavigate } from 'react-router-dom';
-import { FolderKanban, Users, Settings, TrendingUp, AlertTriangle, CheckCircle2, Clock, ArrowRight } from 'lucide-react';
-import { StatsCards } from '../components/dashboard/StatsCards';
-import { ProjectChart } from '../components/dashboard/ProjectChart';
-import { RecentProjects } from '../components/dashboard/RecentProjects';
-import { projects, teachers } from '../lib/mock-data';
+import { useData } from '../contexts/DataContext';
+import { formatCurrency } from '../lib/utils';
+import { ChevronRight, Building2, Wallet2, CreditCard, Smartphone } from 'lucide-react';
+import { cn } from '../lib/utils';
+import type { AccountType } from '../lib/types';
 
-const active = projects.filter(p => p.status === 'aktif').length;
-const late = projects.filter(p => p.status === 'gecikiyor').length;
-const done = projects.filter(p => p.status === 'tamamlandı').length;
-
-const quickNav = [
-  {
-    to: '/projeler',
-    label: 'Projeler',
-    desc: `${active} aktif · ${late} geciken`,
-    icon: FolderKanban,
-    bg: 'bg-blue-50',
-    iconColor: 'text-blue-600',
-    border: 'border-blue-200',
-  },
-  {
-    to: '/ogretmenler',
-    label: 'Öğretmenler',
-    desc: `${teachers.length} kayıtlı öğretmen`,
-    icon: Users,
-    bg: 'bg-emerald-50',
-    iconColor: 'text-emerald-600',
-    border: 'border-emerald-200',
-  },
-  {
-    to: '/ayarlar',
-    label: 'Ayarlar',
-    desc: 'Okul bilgileri ve profil',
-    icon: Settings,
-    bg: 'bg-slate-50',
-    iconColor: 'text-slate-600',
-    border: 'border-slate-200',
-  },
-];
-
-const highlights = [
-  { icon: TrendingUp, label: `${active} proje aktif`, color: 'text-blue-500' },
-  { icon: AlertTriangle, label: `${late} proje gecikiyor`, color: 'text-red-500' },
-  { icon: CheckCircle2, label: `${done} proje tamamlandı`, color: 'text-green-500' },
-  { icon: Clock, label: `${projects.filter(p => p.status === 'beklemede').length} proje beklemede`, color: 'text-amber-500' },
-];
+const accountIcons: Record<AccountType, React.ElementType> = {
+  cash: Wallet2, bank: Building2, credit: CreditCard, digital: Smartphone,
+};
 
 export default function Dashboard() {
+  const { accounts } = useData();
   const navigate = useNavigate();
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Günaydın' : hour < 18 ? 'İyi günler' : 'İyi akşamlar';
-  const today = new Date().toLocaleDateString('tr-TR', { weekday: 'long', day: 'numeric', month: 'long' });
 
   return (
-    <div className="space-y-6 max-w-5xl">
+    <div className="animate-fade-in">
+      <BalanceCard />
 
-      {/* Greeting */}
-      <div>
-        <p className="text-xs text-gray-400 mb-1">{today}</p>
-        <h2 className="text-xl font-bold text-gray-900">{greeting}, Admin 👋</h2>
-      </div>
-
-      {/* Quick Navigation — ana menü kartları */}
-      <div>
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Hızlı Erişim</p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {quickNav.map(({ to, label, desc, icon: Icon, bg, iconColor, border }) => (
-            <button
-              key={to}
-              onClick={() => navigate(to)}
-              className={`flex items-center gap-4 p-4 bg-white rounded-2xl border-2 ${border} shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all text-left group`}
-            >
-              <div className={`w-12 h-12 ${bg} rounded-xl flex items-center justify-center flex-shrink-0`}>
-                <Icon size={22} className={iconColor} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-gray-900 text-sm">{label}</p>
-                <p className="text-xs text-gray-400 mt-0.5 truncate">{desc}</p>
-              </div>
-              <ArrowRight size={16} className="text-gray-300 group-hover:text-gray-500 group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+      <div className="space-y-5 pt-5 pb-4">
+        {/* Accounts */}
+        <div className="mx-4">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">Hesaplarım</h2>
+            <button onClick={() => navigate('/accounts')} className="text-xs font-medium text-primary-600 dark:text-primary-400 flex items-center gap-0.5">
+              Tümü <ChevronRight size={14} />
             </button>
-          ))}
+          </div>
+          <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
+            {accounts.map(a => {
+              const Icon = accountIcons[a.type];
+              return (
+                <div key={a.id} className="flex-shrink-0 card p-4 w-40 space-y-3">
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: a.color + '22' }}>
+                    <Icon size={18} style={{ color: a.color }} />
+                  </div>
+                  <div>
+                    <p className="text-xs text-muted">{a.name}</p>
+                    <p className={cn('text-sm font-bold mt-0.5', a.balance < 0 ? 'text-red-500' : 'text-slate-900 dark:text-slate-100')}>
+                      {formatCurrency(a.balance)}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
+
+        <AISuggestion />
+        <RecentTransactions />
+        <CategoryChart />
       </div>
-
-      {/* Stats */}
-      <StatsCards />
-
-      {/* Chart + Recent */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
-        <div className="lg:col-span-3">
-          <ProjectChart />
-        </div>
-        <div className="lg:col-span-2">
-          <RecentProjects />
-        </div>
-      </div>
-
     </div>
   );
 }
