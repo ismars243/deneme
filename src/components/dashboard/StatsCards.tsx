@@ -19,7 +19,7 @@ export function StatsCards() {
       {stats.map(({ label, value, icon: Icon, accent, iconColor }) => (
         <div
           key={label}
-          className={`bg-white rounded-xl border border-gray-200 border-l-4 ${accent} shadow-sm px-5 py-4`}
+          className={`bg-white rounded-xl border-2 border-gray-200 border-l-4 ${accent} shadow-sm px-5 py-4`}
         >
           <div className="flex items-start justify-between">
             <p className="text-3xl font-bold text-gray-900 leading-none">{value}</p>

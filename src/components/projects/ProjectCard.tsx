@@ -20,7 +20,7 @@ export function ProjectCard({ project: p }: { project: Project }) {
     <div
       onClick={() => navigate(`/projeler/${p.id}`)}
       className={cn(
-        'bg-white rounded-2xl border border-gray-200 border-t-2 shadow-sm cursor-pointer group',
+        'bg-white rounded-2xl border-2 border-gray-200 border-t-[3px] shadow-sm cursor-pointer group',
         'hover:shadow-md hover:border-gray-300 hover:-translate-y-0.5 transition-all duration-200',
         statusAccent[p.status]
       )}
