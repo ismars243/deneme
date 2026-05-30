@@ -4,12 +4,10 @@
     "slug": "finova",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./public/icon.png",
     "userInterfaceStyle": "automatic",
     "scheme": "finova",
     "splash": {
-      "backgroundColor": "#6366f1",
-      "resizeMode": "contain"
+      "backgroundColor": "#6366f1"
     },
     "ios": {
       "supportsTablet": false,
