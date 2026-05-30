@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Finova",
+    "slug": "finova",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./public/icon.png",
+    "userInterfaceStyle": "automatic",
+    "scheme": "finova",
+    "splash": {
+      "backgroundColor": "#6366f1",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.finova.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#6366f1"
+      },
+      "package": "com.finova.app",
+      "edgeToEdgeEnabled": true
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

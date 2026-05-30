@@ -1,30 +1,37 @@
 {
-  "name": "okul-proje-takip",
-  "private": true,
+  "name": "finova",
   "version": "1.0.0",
-  "type": "module",
+  "main": "expo-router/entry",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
   },
   "dependencies": {
+    "expo": "~52.0.46",
+    "expo-router": "~4.0.17",
+    "expo-status-bar": "~2.0.1",
+    "expo-font": "~13.0.4",
+    "expo-splash-screen": "~0.29.22",
+    "expo-system-ui": "~4.0.7",
+    "expo-constants": "~17.0.8",
+    "react": "18.3.1",
+    "react-native": "0.76.9",
+    "react-native-safe-area-context": "4.12.0",
+    "react-native-screens": "~4.4.0",
+    "react-native-svg": "15.8.0",
+    "@react-native-async-storage/async-storage": "2.1.2",
+    "nativewind": "^4.1.23",
+    "tailwindcss": "^3.4.17",
+    "lucide-react-native": "^0.475.0",
+    "react-native-chart-kit": "^6.12.0",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.462.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.27.0",
-    "recharts": "^2.13.0",
     "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.3",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.15",
-    "typescript": "^5.6.3",
-    "vite": "^5.4.10"
+    "@babel/core": "^7.24.0",
+    "@types/react": "~18.3.12",
+    "typescript": "^5.3.3"
   }
 }

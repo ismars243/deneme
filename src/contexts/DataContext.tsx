@@ -9,14 +9,12 @@ interface DataCtx {
   accounts: Account[];
   monthlyChartData: typeof monthlyChartData;
   addTransaction: (t: Omit<Transaction, 'id'>) => void;
-  updateTransaction: (id: string, t: Partial<Transaction>) => void;
   deleteTransaction: (id: string) => void;
   updateBudget: (id: string, limit: number) => void;
   addAccount: (a: Omit<Account, 'id'>) => void;
-  updateAccount: (id: string, updates: Partial<Account>) => void;
   deleteAccount: (id: string) => void;
-  getMonthStats: (month?: string) => { income: number; expense: number; balance: number };
-  getCategorySpending: (month?: string) => Array<{ category: string; amount: number; count: number }>;
+  getMonthStats: () => { income: number; expense: number; balance: number };
+  getCategorySpending: () => Array<{ category: string; amount: number }>;
 }
 
 const DataContext = createContext<DataCtx>({} as DataCtx);
@@ -28,9 +26,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [accounts, setAccounts] = useState<Account[]>(mockAccounts);
 
   function addTransaction(t: Omit<Transaction, 'id'>) {
-    const newT: Transaction = { ...t, id: crypto.randomUUID() };
+    const newT: Transaction = { ...t, id: Math.random().toString(36).slice(2) };
     setTransactions(prev => [newT, ...prev]);
-    // update account balance
     setAccounts(prev => prev.map(a =>
       a.id === t.accountId
         ? { ...a, balance: a.balance + (t.type === 'income' ? t.amount : -t.amount) }
@@ -38,12 +35,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     ));
   }
 
-  function updateTransaction(id: string, updates: Partial<Transaction>) {
-    setTransactions(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t));
-  }
-
   function deleteTransaction(id: string) {
-    const t = transactions.find(t => t.id === id);
+    const t = transactions.find(x => x.id === id);
     if (t) {
       setTransactions(prev => prev.filter(x => x.id !== id));
       setAccounts(prev => prev.map(a =>
@@ -59,42 +52,34 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   }
 
   function addAccount(a: Omit<Account, 'id'>) {
-    setAccounts(prev => [...prev, { ...a, id: crypto.randomUUID() }]);
-  }
-
-  function updateAccount(id: string, updates: Partial<Account>) {
-    setAccounts(prev => prev.map(a => a.id === id ? { ...a, ...updates } : a));
+    setAccounts(prev => [...prev, { ...a, id: Math.random().toString(36).slice(2) }]);
   }
 
   function deleteAccount(id: string) {
     setAccounts(prev => prev.filter(a => a.id !== id));
   }
 
-  function getMonthStats(month = getMonthKey()) {
+  function getMonthStats() {
+    const month = getMonthKey();
     const ts = transactions.filter(t => t.date.startsWith(month));
     const income = ts.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
     const expense = ts.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
     return { income, expense, balance: income - expense };
   }
 
-  function getCategorySpending(month = getMonthKey()) {
+  function getCategorySpending() {
+    const month = getMonthKey();
     const ts = transactions.filter(t => t.date.startsWith(month) && t.type === 'expense');
-    const map = new Map<string, { amount: number; count: number }>();
-    for (const t of ts) {
-      const cur = map.get(t.category) ?? { amount: 0, count: 0 };
-      map.set(t.category, { amount: cur.amount + t.amount, count: cur.count + 1 });
-    }
-    return [...map.entries()]
-      .map(([category, data]) => ({ category, ...data }))
-      .sort((a, b) => b.amount - a.amount);
+    const map = new Map<string, number>();
+    for (const t of ts) map.set(t.category, (map.get(t.category) ?? 0) + t.amount);
+    return [...map.entries()].map(([category, amount]) => ({ category, amount })).sort((a, b) => b.amount - a.amount);
   }
 
   return (
     <DataContext.Provider value={{
       transactions, budgets, accounts, monthlyChartData,
-      addTransaction, updateTransaction, deleteTransaction,
-      updateBudget, addAccount, updateAccount, deleteAccount,
-      getMonthStats, getCategorySpending
+      addTransaction, deleteTransaction, updateBudget,
+      addAccount, deleteAccount, getMonthStats, getCategorySpending,
     }}>
       {children}
     </DataContext.Provider>

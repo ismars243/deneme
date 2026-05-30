@@ -1,15 +1,13 @@
-name: Deploy to GitHub Pages
+name: Type Check
 
 on:
   push:
     branches:
       - claude/github-direct-development-VnKiD
-
-permissions:
-  contents: write
+  pull_request:
 
 jobs:
-  build-deploy:
+  typecheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,14 +18,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --legacy-peer-deps
 
-      - name: Build
-        run: npm run build
-
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          force_orphan: true
+      - name: Type check
+        run: npx tsc --noEmit

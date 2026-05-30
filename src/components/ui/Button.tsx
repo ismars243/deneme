@@ -1,47 +1,65 @@
-import { cn } from '../../lib/utils';
-import type { ButtonHTMLAttributes } from 'react';
+import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'income' | 'expense';
-type Size = 'sm' | 'md' | 'lg' | 'xl';
+type Variant = 'primary' | 'secondary' | 'danger' | 'income' | 'expense';
+type Size = 'sm' | 'md' | 'lg';
 
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface Props {
+  onPress?: () => void;
   variant?: Variant;
   size?: Size;
-  loading?: boolean;
   full?: boolean;
+  loading?: boolean;
+  disabled?: boolean;
+  children: React.ReactNode;
 }
 
-const variants: Record<Variant, string> = {
-  primary: 'bg-primary-600 hover:bg-primary-700 text-white shadow-sm shadow-primary-500/30',
-  secondary: 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300',
-  ghost: 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400',
-  danger: 'bg-red-500 hover:bg-red-600 text-white shadow-sm shadow-red-500/30',
-  income: 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm shadow-emerald-500/30',
-  expense: 'bg-red-500 hover:bg-red-600 text-white shadow-sm shadow-red-500/30',
+const BG: Record<Variant, string> = {
+  primary:   '#6366f1',
+  secondary: '#f1f5f9',
+  danger:    '#ef4444',
+  income:    '#10b981',
+  expense:   '#ef4444',
 };
 
-const sizes: Record<Size, string> = {
-  sm: 'px-3 py-1.5 text-xs rounded-xl',
-  md: 'px-4 py-2.5 text-sm rounded-xl',
-  lg: 'px-6 py-3 text-sm rounded-2xl',
-  xl: 'px-6 py-4 text-base rounded-2xl',
+const TEXT_COLOR: Record<Variant, string> = {
+  primary:   '#fff',
+  secondary: '#475569',
+  danger:    '#fff',
+  income:    '#fff',
+  expense:   '#fff',
 };
 
-export function Button({ variant = 'primary', size = 'md', loading, full, children, className, disabled, ...props }: Props) {
+const PADDING: Record<Size, { paddingVertical: number; paddingHorizontal: number; fontSize: number }> = {
+  sm: { paddingVertical: 8,  paddingHorizontal: 16, fontSize: 13 },
+  md: { paddingVertical: 12, paddingHorizontal: 20, fontSize: 14 },
+  lg: { paddingVertical: 16, paddingHorizontal: 24, fontSize: 16 },
+};
+
+export function Button({ onPress, variant = 'primary', size = 'md', full, loading, disabled, children }: Props) {
+  const p = PADDING[size];
   return (
-    <button
-      className={cn(
-        'inline-flex items-center justify-center gap-2 font-semibold active:scale-95 transition-all select-none',
-        variants[variant], sizes[size],
-        full && 'w-full',
-        (disabled || loading) && 'opacity-50 pointer-events-none',
-        className
-      )}
+    <TouchableOpacity
+      onPress={onPress}
       disabled={disabled || loading}
-      {...props}
+      activeOpacity={0.8}
+      style={[
+        styles.base,
+        { backgroundColor: BG[variant], paddingVertical: p.paddingVertical, paddingHorizontal: p.paddingHorizontal },
+        full && styles.full,
+        (disabled || loading) && styles.disabled,
+      ]}
     >
-      {loading && <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin flex-shrink-0" />}
-      {children}
-    </button>
+      {loading
+        ? <ActivityIndicator color={TEXT_COLOR[variant]} size="small" />
+        : <Text style={[styles.text, { color: TEXT_COLOR[variant], fontSize: p.fontSize }]}>{children as string}</Text>
+      }
+    </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  base:     { borderRadius: 16, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 8 },
+  full:     { width: '100%' },
+  disabled: { opacity: 0.5 },
+  text:     { fontWeight: '600' },
+});
